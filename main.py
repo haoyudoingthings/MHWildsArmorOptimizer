@@ -1,4 +1,5 @@
 # No need to vectorize the calculation (yet)
+from MHWildsArmorOptimizer.classes import *
 from MHWildsArmorOptimizer.data import *
 from itertools import product
 from heapq import heappush, heappushpop

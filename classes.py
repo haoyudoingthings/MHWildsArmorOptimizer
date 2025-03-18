@@ -13,6 +13,9 @@ class Skill:
         self.name = name
         Skill.all[name] = self
 
+    def tot_lvls(self):
+        return max(len(self.atk_buffs), len(self.aff_buffs))
+
     def atk(self, lvl):
         if len(self.atk_buffs) == 0:
             return 0
@@ -30,16 +33,18 @@ class Skill:
 class Decoration:
     all = {}
 
-    def __init__(self, skills: dict, lvl: int, name: str = 'Unnamed'):
+    def __init__(self, skills: dict, lvl: int, name: str = 'Unnamed', tot_amount: int = None):
         self.skills = skills
         self.lvl = lvl # width of the decoration
         self.name = name
+        self.tot_amount = tot_amount if tot_amount is not None else max(skill.tot_lvls() for skill in skills.keys())
         Decoration.all[name] = self
 
 class Armor:
     all = {}
 
     def __init__(self, skills: dict, part: str, slots: list = None, name: str = 'Unnamed'):
+        assert part in ['helm', 'mail', 'braces', 'coil', 'greaves', 'charm'], "Unsupported name for part"
         self.skills = skills
         self.slots = slots if slots is not None else [0, 0, 0] # slots[lvl] = num of slots of that level open
         self.name = name
@@ -111,8 +116,8 @@ class Armorset:
 
         all_skills = self.get_all_skill_lvls()
         for skill, lvl in all_skills.items():
-            # TODO: take uptime into account
-            atk += skill.atk(lvl)
-            aff += skill.aff(lvl)
+            # TODO: properly take uptime into account
+            atk += skill.atk(lvl) * skill.uptime
+            aff += skill.aff(lvl) * skill.uptime
         
-        return atk * (1 + min(1, aff) * crit_bonus)
+        return atk * (1 + min(1, aff) * (crit_bonus if aff >= 0 else -0.25))

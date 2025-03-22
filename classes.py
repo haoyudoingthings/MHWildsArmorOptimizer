@@ -80,6 +80,10 @@ class Armorset:
         else:
             return NotImplemented
     
+    def __lt__(self, other):
+        assert isinstance(other, Armorset), "Can only compare between two armor sets"
+        return self.get_eff_atk() < other.get_eff_atk() # TODO: somehow isolate base atk, aff and crit bonus
+
     def get_empty_slots(self):
         empty_slots = [0, 0, 0]
         for armor in self.parts.values():

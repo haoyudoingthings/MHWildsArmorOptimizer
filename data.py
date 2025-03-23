@@ -1,16 +1,16 @@
-from MHWildsArmorOptimizer.classes import *
+from classes import *
 
 
 # Skills
 WEX = Skill(name="Weakness Exploit", aff_buffs=[0.05, 0.1, 0.15, 0.2, 0.3])
-AGI = Skill(name="Agitator", atk_buffs=[4, 8, 12, 16, 20], aff_buffs=[0.03, 0.05, 0.07, 0.1, 0.15], uptime=0.8)
+AGI = Skill(name="Agitator", atk_buffs=[4, 8, 12, 16, 20], aff_buffs=[0.03, 0.05, 0.07, 0.1, 0.15], uptime=0.7)
 MM = Skill(name="Maximum Might", aff_buffs=[0.1, 0.2, 0.3])
 BR = Skill(name="Burst", atk_buffs=[5])
 CS = Skill(name="Counterstrike", atk_buffs=[10, 15, 25], uptime=0.5)
 LP = Skill(name="Latent Power", uptime=0.5)
 Dosha = Skill(name="Doshaguma's Might", atk_buffs=[0, 10, 10, 25])
 Ebony = Skill(name="Ebony Odogaron's Power", atk_buffs=[0, 3, 3, 10])
-Fulgar = Skill(name="Fulgur Anjanath's Will")
+Fulgur = Skill(name="Fulgur Anjanath's Will")
 Dahaad = Skill(name="Jin Dahaad's Revolt")
 Gore = Skill(name="Gore Magala's Tyranny")
 Arkveld = Skill(name="Arkveld's Hunger")
@@ -22,6 +22,8 @@ Tenderizer = Decoration(name="Tenderizer", lvl=3, skills={WEX: 1})
 Challenger = Decoration(name="Challenger", lvl=3, skills={AGI: 1})
 Mighty = Decoration(name="Mighty", lvl=2, skills={MM: 1})
 Chain = Decoration(name="Chain", lvl=3, skills={BR: 1})
+Counter = Decoration(name="Counter", lvl=2, skills={CS: 1})
+Throttle = Decoration(name="Throttle", lvl=3, skills={LP: 1})
 
 
 # Armors

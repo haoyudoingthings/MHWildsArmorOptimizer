@@ -5,9 +5,10 @@ from classes import *
 WEX = Skill(name="Weakness Exploit", aff_buffs=[0.05, 0.1, 0.15, 0.2, 0.3])
 AGI = Skill(name="Agitator", atk_buffs=[4, 8, 12, 16, 20], aff_buffs=[0.03, 0.05, 0.07, 0.1, 0.15], uptime=0.7)
 MM = Skill(name="Maximum Might", aff_buffs=[0.1, 0.2, 0.3])
-BR = Skill(name="Burst", atk_buffs=[5])
+BR = Skill(name="Burst", atk_buffs=[5]) # for GS
 CS = Skill(name="Counterstrike", atk_buffs=[10, 15, 25], uptime=0.5)
-LP = Skill(name="Latent Power", uptime=0.5)
+LP = Skill(name="Latent Power", aff_buffs=[0.1, 0.2, 0.3, 0.4, 0.5], uptime=0.5)
+EE = Skill(name="Evade Extender")
 Dosha = Skill(name="Doshaguma's Might", atk_buffs=[0, 10, 10, 25])
 Ebony = Skill(name="Ebony Odogaron's Power", atk_buffs=[0, 3, 3, 10])
 Fulgur = Skill(name="Fulgur Anjanath's Will")
@@ -15,6 +16,8 @@ Dahaad = Skill(name="Jin Dahaad's Revolt")
 Gore = Skill(name="Gore Magala's Tyranny")
 Arkveld = Skill(name="Arkveld's Hunger")
 GArkveld = Skill(name="G. Arkveld's Vitality")
+Udra = Skill(name="Nu Udra's Mutiny")
+Rey = Skill(name="Rey Dau's Voltage")
 
 
 # Decorations
@@ -27,8 +30,10 @@ Throttle = Decoration(name="Throttle", lvl=3, skills={LP: 1})
 
 
 # Armors
-Doshaguma_Mail_B = Armor(name="Doshaguma Mail B", slots=[3, 0, 0], skills={Dosha: 1}, part='mail')
-Doshaguma_Coil_B = Armor(name="Doshaguma Coil B", slots=[0, 2, 0], skills={Dosha: 1}, part='coil')
+Doshaguma_Coil_A = Armor(name="Doshaguma Coil A", slots=[1, 0, 0], skills={Dosha: 1, LP:2}, part='coil')
+
+Doshaguma_Mail_B = Armor(name="Doshaguma Mail B", slots=[3, 0, 0], skills={Dosha: 1, LP:1}, part='mail')
+Doshaguma_Coil_B = Armor(name="Doshaguma Coil B", slots=[0, 2, 0], skills={Dosha: 1, LP:1}, part='coil')
 Doshaguma_Greaves_B = Armor(name="Doshaguma Greaves B", slots=[2, 1, 0], skills={Dosha: 1}, part='greaves')
 
 G_Doshaguma_Helm_B = Armor(name="G. Doshaguma Helm B", slots=[1, 2, 0], skills={Dosha: 1}, part='helm')
@@ -75,6 +80,27 @@ G_Ebony_Mail_B = Armor(name="G. Ebony Mail B", slots=[0, 2, 0], skills={Ebony: 1
 G_Ebony_Braces_B = Armor(name="G. Ebony Braces B", slots=[1, 1, 0], skills={Ebony: 1, BR: 1}, part='braces')
 G_Ebony_Coil_B = Armor(name="G. Ebony Coil B", slots=[1, 1, 0], skills={Ebony: 1, BR: 1}, part='coil')
 G_Ebony_Greaves_B = Armor(name="G. Ebony Greaves B", slots=[1, 1, 0], skills={Ebony: 1}, part='greaves')
+
+Udra_Mail_A = Armor(name="Udra Miremail A", slots=[2, 0, 0], skills={Udra: 1, BR: 1}, part='mail')
+Udra_Braces_A = Armor(name="Udra Mirebraces A", slots=[0, 1, 0], skills={Udra: 1, CS: 2}, part='braces')
+
+Udra_Helm_B = Armor(name="Udra Mirehelm B", slots=[0, 2, 0], skills={Udra: 1, CS: 1}, part='helm')
+Udra_Braces_B = Armor(name="Udra Mirebraces B", slots=[1, 0, 1], skills={Udra: 1, CS: 1}, part='braces')
+Udra_Greaves_B = Armor(name="Udra Miregreaves B", slots=[1, 0, 1], skills={Udra: 1, BR: 1}, part='greaves')
+
+Dragonking_A = Armor(name="Dragonking Eyepatch A", skills={CS: 3}, part='helm')
+
+Blango_Mail_B = Armor(name="Blango Mail B", slots=[0, 1, 0], skills={AGI: 2}, part='mail')
+Blango_Coil_B = Armor(name="Blango Coil B", slots=[2, 0, 0], skills={AGI: 2}, part='coil')
+Blango_Greaves_B = Armor(name="Blango Greaves B", slots=[0, 2, 0], skills={AGI: 1}, part='greaves')
+
+Rey_Greaves_A = Armor(name="Rey Sandgreaves A", slots=[0, 0, 1], skills={Rey: 1, MM: 1, LP: 1}, part='greaves')
+
+Rey_Helm_B = Armor(name="Rey Sandhelm B", slots=[0, 0, 1], skills={Rey: 1, LP: 1, EE: 1}, part='helm')
+Rey_Braces_B = Armor(name="Rey Sandbraces B", slots=[0, 0, 1], skills={Rey: 1, LP: 2}, part='braces')
+Rey_Greaves_B = Armor(name="Rey Sandgreaves B", slots=[2, 0, 1], skills={Rey: 1, LP: 1}, part='greaves')
+
+Azuz_Helm_A = Armor(name="Azuz Headdress A", slots=[0, 1, 0], skills={MM: 2}, part='helm')
 
 
 # Charms

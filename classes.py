@@ -50,13 +50,17 @@ class Decoration:
         return self.name
 
 class Weapon:
-    def __init__(self, atk: int, aff: float, crit_bonus: float):
+    def __init__(self, atk: int, aff: float, crit_bonus: float, name: str | None = None):
         self.atk = atk
         self.aff = aff
         self.crit_bonus = crit_bonus
+        self.name = name
 
     def __str__(self):
-        return f"Weapon({self.atk}, {self.aff}, {self.crit_bonus})"
+        if self.name is not None:
+            return self.name
+        else:
+            return f"Weapon({self.atk}, {self.aff}, {self.crit_bonus})"
 
 class Armor:
     all = {}

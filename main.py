@@ -27,8 +27,12 @@ def combinations_with_limited_replacement(objects, quantities, n):
 
 def main():
     # TODO: refactor configs into another file
-    top_n = 5
-    weapon = Weapon(200, 0.15, 0.34) # CB3
+    top_n = 3
+    weapons = [ # Meat: +2; Powercharm: +6
+        Weapon(200 + 8, 0.15, 0.34), # CB3
+        # Weapon(207 + 8, 0.15, 0.25), # AB3
+        # Weapon(200 + 8, 0.27, 0.25), # CE3
+    ]
     must_have_skills = {GArkveld: 2, Fulgur: 2}
 
     all_decos = []
@@ -53,9 +57,9 @@ def main():
 
     # TODO: efficiency of armor search can still be improved
     results = []
-    for helm, mail, braces, coil, greaves, charm in tqdm(
-        product(*[armors_by_part[k].values() for k in ['helm', 'mail', 'braces', 'coil', 'greaves', 'charm']]), 
-        total=reduce(lambda a, b: a * b, [len(l) for l in armors_by_part.values()])
+    for weapon, helm, mail, braces, coil, greaves, charm in tqdm(
+        product(weapons, *[armors_by_part[k].values() for k in ['helm', 'mail', 'braces', 'coil', 'greaves', 'charm']]), 
+        total=reduce(lambda a, b: a * b, [len(weapons)] + [len(l) for l in armors_by_part.values()])
     ):
         armorset_no_deco = weapon + helm + mail + braces + coil + greaves + charm
         # minimum skill requirement check 1
@@ -87,13 +91,14 @@ def main():
     results.sort(reverse=True)
     for armorset in results:
         print(f"\nEffective attack power: {armorset.get_eff_atk():.4f}")
-        print("Helm:   ", armorset.parts['helm'].name)
-        print("Mail:   ", armorset.parts['mail'].name)
-        print("Braces: ", armorset.parts['braces'].name)
-        print("Coil:   ", armorset.parts['coil'].name)
-        print("Greaves:", armorset.parts['greaves'].name)
-        print("Charm:  ", armorset.parts['charm'].name)
-        print("Decos:  ", ' '.join([d.name for d in armorset.decos]))
+        print("Weapon: ", armorset.weapon)
+        print("Helm:   ", armorset.parts['helm'])
+        print("Mail:   ", armorset.parts['mail'])
+        print("Braces: ", armorset.parts['braces'])
+        print("Coil:   ", armorset.parts['coil'])
+        print("Greaves:", armorset.parts['greaves'])
+        print("Charm:  ", armorset.parts['charm'])
+        print("Decos:  ", ' '.join([str(d) for d in armorset.decos]))
         print("===== Total skills =====")
         for i, (k, v) in enumerate(armorset.get_all_skill_lvls().items()):
             print(f"{str(k) + ' ' + str(v): <30}", end='\n' if i % 3 == 2 else '')

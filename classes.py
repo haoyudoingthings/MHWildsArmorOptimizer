@@ -7,7 +7,7 @@ MAX_DECO_LVL = 3
 class Skill:
     all = {}
 
-    def __init__(self, atk_buffs: list | None = None, aff_buffs: list | None = None, name: str = 'Unnamed', uptime: float = 1):
+    def __init__(self, atk_buffs: list[float] | None = None, aff_buffs: list[float] | None = None, name: str = 'Unnamed', uptime: float = 1):
         # start from level 1 (do not include level 0 data)
         assert (atk_buffs is None) or (aff_buffs is None) or (len(atk_buffs) == len(aff_buffs))
         self.atk_buffs = atk_buffs if atk_buffs is not None else []
@@ -19,17 +19,17 @@ class Skill:
     def __str__(self):
         return self.name
 
-    def tot_lvls(self):
+    def tot_lvls(self) -> int:
         return max(len(self.atk_buffs), len(self.aff_buffs))
 
-    def atk(self, lvl):
+    def atk(self, lvl) -> float:
         if len(self.atk_buffs) == 0:
             return 0
         if lvl > len(self.atk_buffs):
             return self.atk_buffs[-1]
         return self.atk_buffs[lvl-1]
     
-    def aff(self, lvl):
+    def aff(self, lvl) -> float:
         if len(self.aff_buffs) == 0:
             return 0
         if lvl > len(self.aff_buffs):
@@ -131,7 +131,7 @@ class Armorset:
         assert isinstance(other, Armorset), "Can only compare between two armor sets"
         return self.get_eff_atk() < other.get_eff_atk()
 
-    def get_empty_slots(self):
+    def get_empty_slots(self) -> list[int]:
         empty_slots = [0] * MAX_DECO_LVL
         for armor in self.parts.values():
             for i in range(3):
@@ -145,14 +145,14 @@ class Armorset:
                 empty_slots[d.lvl+1] -= 1
         return empty_slots
     
-    def get_skill_lvl(self, skill):
+    def get_skill_lvl(self, skill) -> int:
         lvl = 0
         for part in chain(self.parts.values(), self.decos):
             if skill in part.skills:
                 lvl += part.skills[skill]
         return lvl
     
-    def get_all_skill_lvls(self):
+    def get_all_skill_lvls(self) -> dict[Skill, int]:
         all_skills = {}
         for part in chain(self.parts.values(), self.decos):
             for k, v in part.skills.items():
@@ -162,7 +162,7 @@ class Armorset:
                     all_skills[k] = v
         return all_skills
 
-    def get_eff_atk(self):
+    def get_eff_atk(self) -> float:
         if self.eff_atk is None:
             atk, aff, crit_bonus = self.weapon.atk, self.weapon.aff, self.weapon.crit_bonus
             all_skills = self.get_all_skill_lvls()

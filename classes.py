@@ -165,10 +165,13 @@ class Armorset:
     def get_eff_atk(self) -> float:
         if self.eff_atk is None:
             atk, aff, crit_bonus = self.weapon.atk, self.weapon.aff, self.weapon.crit_bonus
+            uptime_atk_aff_lst = [(1, atk, aff)]
             all_skills = self.get_all_skill_lvls()
             for skill, lvl in all_skills.items():
-                # TODO: properly take uptime into account
-                atk += skill.atk(lvl) * skill.uptime
-                aff += skill.aff(lvl) * skill.uptime
-            self.eff_atk = atk * (1 + min(1, aff) * (crit_bonus if aff >= 0 else -0.25))
+                if skill.uptime == 1:
+                    uptime_atk_aff_lst = [(p, atk + skill.atk(lvl), min(1, aff + skill.aff(lvl))) for p, atk, aff in uptime_atk_aff_lst]
+                else:
+                    uptime_atk_aff_lst = [(p * skill.uptime, atk + skill.atk(lvl), min(1, aff + skill.aff(lvl))) for p, atk, aff in uptime_atk_aff_lst] + \
+                                         [(p * (1 - skill.uptime), atk, aff) for p, atk, aff in uptime_atk_aff_lst]
+            self.eff_atk = sum(p * atk * (1 + aff * (crit_bonus if aff >= 0 else -0.25)) for p, atk, aff in uptime_atk_aff_lst)
         return self.eff_atk

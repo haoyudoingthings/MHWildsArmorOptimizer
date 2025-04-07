@@ -1,4 +1,3 @@
-# TODO: add ways for skills to interact with each other (e.g. Fulgar Anjanath's Power and Maximum Might)
 # TODO: add ways to accommodate skills that have different effects during different circumstances (e.g. Gore Magala's Tyranny)
 from itertools import chain
 
@@ -7,13 +6,14 @@ MAX_DECO_LVL = 3
 class Skill:
     all = {}
 
-    def __init__(self, atk_buffs: list[float] | None = None, aff_buffs: list[float] | None = None, name: str = 'Unnamed', uptime: float = 1):
+    def __init__(self, atk_buffs: list[float] | None = None, aff_buffs: list[float] | None = None, name: str = 'Unnamed', uptime: list[float] | float = 1, replace: list | None = None):
         # start from level 1 (do not include level 0 data)
         assert (atk_buffs is None) or (aff_buffs is None) or (len(atk_buffs) == len(aff_buffs))
         self.atk_buffs = atk_buffs if atk_buffs is not None else []
         self.aff_buffs = aff_buffs if aff_buffs is not None else []
+        self.uptime_lst = [uptime] if isinstance(uptime, (int, float)) else uptime
         self.name = name
-        self.uptime = uptime
+        self.replace = replace
         Skill.all[name] = self
 
     def __str__(self):
@@ -35,6 +35,18 @@ class Skill:
         if lvl > len(self.aff_buffs):
             return self.aff_buffs[-1]
         return self.aff_buffs[lvl-1]
+
+    def uptime(self, lvl) -> float:
+        if lvl > len(self.uptime_lst):
+            return self.uptime_lst[-1]
+        return self.uptime_lst[lvl-1]
+    
+    def replace_skill(self, lvl):
+        if self.replace is None:
+            return None
+        if lvl > len(self.replace):
+            return self.replace[-1]
+        return self.replace[lvl-1]
 
 class Decoration:
     all = {}
@@ -167,11 +179,19 @@ class Armorset:
             atk, aff, crit_bonus = self.weapon.atk, self.weapon.aff, self.weapon.crit_bonus
             uptime_atk_aff_lst = [(1, atk, aff)]
             all_skills = self.get_all_skill_lvls()
+
+            skill_replacement = [skill.replace_skill(lvl) for skill, lvl in all_skills.items() if skill.replace_skill(lvl) is not None]
+            for skill, skill2 in skill_replacement:
+                if skill in all_skills:
+                    all_skills[skill2] = all_skills[skill]
+                    del all_skills[skill]
+            
             for skill, lvl in all_skills.items():
-                if skill.uptime == 1:
+                if skill.uptime(lvl) == 1:
                     uptime_atk_aff_lst = [(p, atk + skill.atk(lvl), min(1, aff + skill.aff(lvl))) for p, atk, aff in uptime_atk_aff_lst]
                 else:
-                    uptime_atk_aff_lst = [(p * skill.uptime, atk + skill.atk(lvl), min(1, aff + skill.aff(lvl))) for p, atk, aff in uptime_atk_aff_lst] + \
-                                         [(p * (1 - skill.uptime), atk, aff) for p, atk, aff in uptime_atk_aff_lst]
+                    uptime_atk_aff_lst = [(p * skill.uptime(lvl), atk + skill.atk(lvl), min(1, aff + skill.aff(lvl))) for p, atk, aff in uptime_atk_aff_lst] + \
+                                         [(p * (1 - skill.uptime(lvl)), atk, aff) for p, atk, aff in uptime_atk_aff_lst]
             self.eff_atk = sum(p * atk * (1 + aff * (crit_bonus if aff >= 0 else -0.25)) for p, atk, aff in uptime_atk_aff_lst)
+        
         return self.eff_atk

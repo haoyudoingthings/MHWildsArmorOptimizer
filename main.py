@@ -27,13 +27,11 @@ def combinations_with_limited_replacement(objects, quantities, n):
 
 def main():
     # TODO: refactor configs into another file
-    top_n = 3
+    top_n = 10
     weapons = [ # Meat: +2; Powercharm: +6
         Weapon(200 + 8, 0.15, 0.34), # CB3
-        # Weapon(207 + 8, 0.15, 0.25), # AB3
-        # Weapon(200 + 8, 0.27, 0.25), # CE3
     ]
-    must_have_skills = {GArkveld: 2, Fulgur: 2}
+    must_have_skills = {GArkveld: 2}
 
     all_decos = []
     deco_quantity = []

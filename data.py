@@ -4,20 +4,22 @@ from classes import *
 # Skills
 WEX = Skill(name="Weakness Exploit", aff_buffs=[0.05, 0.1, 0.15, 0.2, 0.3])
 AGI = Skill(name="Agitator", atk_buffs=[4, 8, 12, 16, 20], aff_buffs=[0.03, 0.05, 0.07, 0.1, 0.15], uptime=0.7)
-MM = Skill(name="Maximum Might", aff_buffs=[0.1, 0.2, 0.3])
+MM = Skill(name="Maximum Might", aff_buffs=[0.1, 0.2, 0.3], uptime=0.75)
+MM_Fulgur = Skill(name="Maximum Might", aff_buffs=[0.1, 0.2, 0.3])
 BR = Skill(name="Burst", atk_buffs=[5]) # for GS
-CS = Skill(name="Counterstrike", atk_buffs=[10, 15, 25], uptime=0.5)
+CS = Skill(name="Counterstrike", atk_buffs=[10, 15, 25], uptime=[0.3, 0.35, 0.45])
 LP = Skill(name="Latent Power", aff_buffs=[0.1, 0.2, 0.3, 0.4, 0.5], uptime=0.5)
 EE = Skill(name="Evade Extender")
 Dosha = Skill(name="Doshaguma's Might", atk_buffs=[0, 10, 10, 25])
 Ebony = Skill(name="Ebony Odogaron's Power", atk_buffs=[0, 3, 3, 10])
-Fulgur = Skill(name="Fulgur Anjanath's Will")
+Fulgur = Skill(name="Fulgur Anjanath's Will", replace=[None, (MM, MM_Fulgur)])
 Dahaad = Skill(name="Jin Dahaad's Revolt")
 Gore = Skill(name="Gore Magala's Tyranny")
 Arkveld = Skill(name="Arkveld's Hunger")
 GArkveld = Skill(name="G. Arkveld's Vitality")
 Udra = Skill(name="Nu Udra's Mutiny")
 Rey = Skill(name="Rey Dau's Voltage")
+Zoh = Skill(name="Zoh Shia's Pulse")
 
 
 # Decorations
@@ -102,6 +104,13 @@ Rey_Greaves_B = Armor(name="Rey Sandgreaves B", slots=[2, 0, 1], skills={Rey: 1,
 
 Azuz_Helm_A = Armor(name="Azuz Headdress A", slots=[0, 1, 0], skills={MM: 2}, part='helm')
 
+Numinous_Mail_A = Armor(name="Numinous Shroud A", slots=[1, 0, 0], skills={AGI: 2, CS: 1, Zoh: 1}, part='mail')
+Numinous_Greaves_A = Armor(name="Numinous Greaves A", slots=[1, 1, 0], skills={CS: 2, Zoh: 1}, part='greaves')
+
+Numinous_Helm_B = Armor(name="Numinous Crown B", slots=[1, 1, 1], skills={AGI: 1, Zoh: 1}, part='helm')
+Numinous_Mail_B = Armor(name="Numinous Shroud B", slots=[0, 0, 1], skills={AGI: 2, Zoh: 1}, part='mail')
+Numinous_Coil_B = Armor(name="Numinous Overlay B", slots=[0, 1, 0], skills={AGI: 2, Zoh: 1}, part='coil')
+Numinous_Greaves_B = Armor(name="Numinous Greaves B", slots=[0, 1, 1], skills={CS: 1, Zoh: 1}, part='greaves')
 
 # Charms
 Challenger_Charm_II = Armor(name="Challenger Charm II", skills={AGI: 2}, part='charm')

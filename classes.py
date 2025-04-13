@@ -1,19 +1,29 @@
 # TODO: add ways to accommodate skills that have different effects during different circumstances (e.g. Gore Magala's Tyranny)
 from itertools import chain
 
+
 MAX_DECO_LVL = 3
+ARMOR_PART_NAMES = ['helm', 'mail', 'braces', 'coil', 'greaves', 'charm']
 
 class Skill:
     all = {}
 
-    def __init__(self, atk_buffs: list[float] | None = None, aff_buffs: list[float] | None = None, name: str = 'Unnamed', uptime: list[float] | float = 1, replace: list | None = None):
+    def __init__(
+            self, atk_buffs: list[float] | None = None, aff_buffs: list[float] | None = None, 
+            name: str = 'Unnamed', uptime: list[float] | float = 1, replace: list | None = None, 
+            uptime_buffs_lst_lst: list[list[tuple[float, float, float]]] | None = None, pass_calc: bool = False, 
+        ):
         # start from level 1 (do not include level 0 data)
-        assert (atk_buffs is None) or (aff_buffs is None) or (len(atk_buffs) == len(aff_buffs))
+        assert atk_buffs is None or aff_buffs is None or len(atk_buffs) == len(aff_buffs)
+        assert (atk_buffs is None and aff_buffs is None) or uptime_buffs_lst_lst is None
+        assert uptime_buffs_lst_lst is None or all(sum(p for p, _, _ in l) == 1 for l in uptime_buffs_lst_lst), "Sum of uptimes must be 1"
         self.atk_buffs = atk_buffs if atk_buffs is not None else []
         self.aff_buffs = aff_buffs if aff_buffs is not None else []
         self.uptime_lst = [uptime] if isinstance(uptime, (int, float)) else uptime
         self.name = name
         self.replace = replace
+        self.uptime_buffs_lst_lst = uptime_buffs_lst_lst
+        self.pass_calc = pass_calc
         Skill.all[name] = self
 
     def __str__(self):
@@ -40,6 +50,15 @@ class Skill:
         if lvl > len(self.uptime_lst):
             return self.uptime_lst[-1]
         return self.uptime_lst[lvl-1]
+    
+    def get_uptime_buffs_lst(self, lvl) -> list[tuple[float, float, float]]:
+        if self.uptime_buffs_lst_lst is not None:
+            if lvl > len(self.uptime_buffs_lst_lst):
+                return self.uptime_buffs_lst_lst[-1]
+            return self.uptime_buffs_lst_lst[lvl-1]
+        if self.uptime(lvl) == 1:
+            return [(1, self.atk(lvl), self.aff(lvl))]
+        return [(self.uptime(lvl), self.atk(lvl), self.aff(lvl)), (1 - self.uptime(lvl), 0, 0)]
     
     def replace_skill(self, lvl):
         if self.replace is None:
@@ -73,12 +92,21 @@ class Weapon:
             return self.name
         else:
             return f"Weapon({self.atk}, {self.aff}, {self.crit_bonus})"
+    
+    def __add__(self, other):
+        if other is None:
+            return self
+        else:
+            return NotImplemented
+        
+    def __radd__(self, other):
+        return self + other
 
 class Armor:
     all = {}
 
     def __init__(self, skills: dict[Skill, int], part: str, slots: list[int] | None = None, name: str = 'Unnamed'):
-        assert part in ['helm', 'mail', 'braces', 'coil', 'greaves', 'charm'], "Unsupported name for part"
+        assert part in ARMOR_PART_NAMES, "Unsupported name for part"
         self.skills = skills
         self.slots = slots if slots is not None else [0] * MAX_DECO_LVL # slots[lvl] = num of slots of that level open
         self.name = name
@@ -111,7 +139,7 @@ class Armor:
 
 class Armorset:
     def __init__(self, parts: dict[str, Armor] | None = None, decos: list[Decoration] | None = None, weapon: Weapon | None = None):
-        assert parts is None or all(k in ['helm', 'mail', 'braces', 'coil', 'greaves', 'charm'] for k in parts.keys()), "Unsupported keys for parts"
+        assert parts is None or all(k in ARMOR_PART_NAMES for k in parts.keys()), "Unsupported keys for parts"
         self.parts = parts if parts is not None else {}
         self.decos = decos if decos is not None else []
         self.weapon = weapon
@@ -176,8 +204,7 @@ class Armorset:
 
     def get_eff_atk(self) -> float:
         if self.eff_atk is None:
-            atk, aff, crit_bonus = self.weapon.atk, self.weapon.aff, self.weapon.crit_bonus
-            uptime_atk_aff_lst = [(1, atk, aff)]
+            atk0, aff0, crit_bonus = self.weapon.atk, self.weapon.aff, self.weapon.crit_bonus
             all_skills = self.get_all_skill_lvls()
 
             skill_replacement = [skill.replace_skill(lvl) for skill, lvl in all_skills.items() if skill.replace_skill(lvl) is not None]
@@ -186,12 +213,17 @@ class Armorset:
                     all_skills[skill2] = all_skills[skill]
                     del all_skills[skill]
             
+            uptime_atk_aff_bonus_lst = [(1, 0, 0)]
             for skill, lvl in all_skills.items():
-                if skill.uptime(lvl) == 1:
-                    uptime_atk_aff_lst = [(p, atk + skill.atk(lvl), min(1, aff + skill.aff(lvl))) for p, atk, aff in uptime_atk_aff_lst]
-                else:
-                    uptime_atk_aff_lst = [(p * skill.uptime(lvl), atk + skill.atk(lvl), min(1, aff + skill.aff(lvl))) for p, atk, aff in uptime_atk_aff_lst] + \
-                                         [(p * (1 - skill.uptime(lvl)), atk, aff) for p, atk, aff in uptime_atk_aff_lst]
-            self.eff_atk = sum(p * atk * (1 + aff * (crit_bonus if aff >= 0 else -0.25)) for p, atk, aff in uptime_atk_aff_lst)
+                if skill.pass_calc:
+                    continue
+                new_lst = []
+                for p, atk, aff in skill.get_uptime_buffs_lst(lvl):
+                    new_lst.extend([(p0 * p, atk0 + atk, aff0 + aff) for p0, atk0, aff0 in uptime_atk_aff_bonus_lst])
+                uptime_atk_aff_bonus_lst = new_lst
+                # uptime_atk_aff_lst = [(p * skill.uptime(lvl), atk + skill.atk(lvl), min(1, aff + skill.aff(lvl))) for p, atk, aff in uptime_atk_aff_lst] + \
+                #                      [(p * (1 - skill.uptime(lvl)), atk, aff) for p, atk, aff in uptime_atk_aff_lst]
+            
+            self.eff_atk = sum(p * (atk0 + atk) * (1 + min(1, aff0 + aff) * (crit_bonus if aff0 + aff >= 0 else -0.25)) for p, atk, aff in uptime_atk_aff_bonus_lst)
         
         return self.eff_atk

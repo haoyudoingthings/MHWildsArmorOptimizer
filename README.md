@@ -10,6 +10,10 @@ This optimizer is currently made with optimization for greatswords in mind, ther
 
 ## TODO
 
-1. Refactor configs into another file
-2. Allow more complicated skill effects (e.g. Gore Magala's Tyranny)
-3. Improve efficiency of armor search
+- Keep system awake
+- Refactor configs into another file
+- Keep cache
+  - Use the hash of config as signature
+- Allow more complicated skill effects
+  - Flayer
+- Improve efficiency of armor search

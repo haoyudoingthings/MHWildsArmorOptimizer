@@ -10,8 +10,8 @@ This optimizer is currently made with optimization for greatswords in mind, ther
 
 ## TODO
 
-- Keep system awake
 - Refactor configs into another file
+- Unit test?
 - Keep cache
   - Use the hash of config as signature
 - Allow more complicated skill effects

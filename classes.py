@@ -30,9 +30,14 @@ class Skill:
         return self.name
 
     def tot_lvls(self) -> int:
-        return max(len(self.atk_buffs), len(self.aff_buffs))
+        if self.uptime_buffs_lst_lst is None:
+            return max(len(self.atk_buffs), len(self.aff_buffs))
+        else:
+            return len(self.uptime_buffs_lst_lst)
 
     def atk(self, lvl) -> float:
+        if self.uptime_buffs_lst_lst is not None:
+            return NotImplemented
         if len(self.atk_buffs) == 0:
             return 0
         if lvl > len(self.atk_buffs):
@@ -40,6 +45,8 @@ class Skill:
         return self.atk_buffs[lvl-1]
     
     def aff(self, lvl) -> float:
+        if self.uptime_buffs_lst_lst is not None:
+            return NotImplemented
         if len(self.aff_buffs) == 0:
             return 0
         if lvl > len(self.aff_buffs):

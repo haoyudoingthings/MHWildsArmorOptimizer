@@ -9,8 +9,8 @@ MM_Fulgur = Skill(name="Maximum Might", aff_buffs=[0.1, 0.2, 0.3])
 BR = Skill(name="Burst", atk_buffs=[5]) # for GS
 CS = Skill(name="Counterstrike", atk_buffs=[10, 15, 25], uptime=[0.3, 0.35, 0.45])
 LP = Skill(name="Latent Power", aff_buffs=[0.1, 0.2, 0.3, 0.4, 0.5], uptime=0.5)
-LP_Rey_I = Skill(name="Latent Power", aff_buffs=[0.1, 0.2, 0.3, 0.4, 0.5], uptime=5/9)
-LP_Rey_II = Skill(name="Latent Power", aff_buffs=[0.1, 0.2, 0.3, 0.4, 0.5], uptime=7/11)
+LP_Rey_I = Skill(name="Latent Power", aff_buffs=[0.1, 0.2, 0.3, 0.4, 0.5], uptime=150/(120+150)) # activates for 150s
+LP_Rey_II = Skill(name="Latent Power", aff_buffs=[0.1, 0.2, 0.3, 0.4, 0.5], uptime=210/(120+210)) # activates for 210s
 EE = Skill(name="Evade Extender", pass_calc=True)
 FLAY = Skill(name="Flayer", pass_calc=True)
 AV = Skill(name="Antivirus", pass_calc=True)
@@ -25,9 +25,9 @@ Rey = Skill(name="Rey Dau's Voltage", replace=[None, (LP, LP_Rey_I), (LP, LP_Rey
 Zoh = Skill(name="Zoh Shia's Pulse", pass_calc=True)
 Gore = Skill(name="Gore Magala's Tyranny", uptime_buffs_lst_lst=[
     [(1, 0, 0)], 
-    [(0.9, 0, 0.25), (0.1, 0, 0)], # lvl 2
-    [(0.9, 0, 0.25), (0.1, 0, 0)], 
-    [(0.9, 15, 0.25), (0.1, 10, 0)], # lvl 4
+    [(0.7, 0, 0.25), (0.3, 0, 0)], # lvl 2
+    [(0.7, 0, 0.25), (0.3, 0, 0)], 
+    [(0.7, 15, 0.25), (0.3, 10, 0)], # lvl 4
 ]) # Assuming antivirus already taken into account
 
 
@@ -38,7 +38,8 @@ Mighty = Decoration(name="Mighty", lvl=2, skills={MM: 1})
 Chain = Decoration(name="Chain", lvl=3, skills={BR: 1})
 Counter = Decoration(name="Counter", lvl=2, skills={CS: 1})
 Throttle = Decoration(name="Throttle", lvl=3, skills={LP: 1})
-Flayer = Decoration(name="Flayer", lvl=3, skills={FLAY: 1})
+# Flayer = Decoration(name="Flayer", lvl=3, skills={FLAY: 1})
+# Sane = Decoration(name="Sane", lvl=1, skills={AV: 1})
 
 
 # Armors

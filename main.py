@@ -4,6 +4,9 @@ from functools import reduce
 from itertools import product
 from heapq import heappush, heappushpop
 from tqdm import tqdm
+from wakepy import keep
+from joblib import Parallel, delayed
+from tqdm_joblib import tqdm_joblib
 
 
 def combinations_with_limited_replacement(objects, quantities, n):
@@ -55,16 +58,18 @@ def main():
 
     # TODO: efficiency of armor search can still be improved
     results = []
-    for weapon, helm, mail, braces, coil, greaves, charm in tqdm(
-        product(weapons, *[armors_by_part[k].values() for k in ['helm', 'mail', 'braces', 'coil', 'greaves', 'charm']]), 
+    for weapon_and_armors in tqdm(
+        product(weapons, *[armors_by_part[k].values() for k in ARMOR_PART_NAMES]), 
         total=reduce(lambda a, b: a * b, [len(weapons)] + [len(l) for l in armors_by_part.values()])
     ):
-        armorset_no_deco = weapon + helm + mail + braces + coil + greaves + charm
+        armorset_no_deco = sum(weapon_and_armors, None)
         # minimum skill requirement check 1
         if any(armorset_no_deco.get_skill_lvl(skill) < lvl for skill, lvl in must_have_skills_armor_only.items()):
             continue
         empty_slots = armorset_no_deco.get_empty_slots()
         
+        # TODO: this part can definitely be sped up
+        # Use DFS? From low lvl slots up?
         for deco_combo in combinations_with_limited_replacement(all_decos+[None], deco_quantity+[sum(empty_slots)], sum(empty_slots)):
             # check if there's enough slots
             slots_taken = [0] * MAX_DECO_LVL
@@ -88,7 +93,7 @@ def main():
     
     results.sort(reverse=True)
     for armorset in results:
-        print(f"\nEffective attack power: {armorset.get_eff_atk():.4f}")
+        print(f"\nEffective Raw: {armorset.get_eff_atk():.4f}")
         print("Weapon: ", armorset.weapon)
         print("Helm:   ", armorset.parts['helm'])
         print("Mail:   ", armorset.parts['mail'])
@@ -104,4 +109,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    with keep.running():
+        main()

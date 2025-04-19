@@ -86,6 +86,10 @@ class Decoration:
 
     def __str__(self):
         return self.name
+    
+    @classmethod
+    def get_all_decos_of_lvl(cls, lvl):
+        return [deco for deco in cls.all.values() if deco.lvl == lvl]
 
 class Weapon:
     def __init__(self, atk: int, aff: float, crit_bonus: float, name: str | None = None):

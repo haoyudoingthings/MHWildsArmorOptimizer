@@ -107,11 +107,11 @@ Blango_Mail_B = Armor(name="Blango Mail B", slots=[0, 1, 0], skills={AGI: 2}, pa
 Blango_Coil_B = Armor(name="Blango Coil B", slots=[2, 0, 0], skills={AGI: 2}, part='coil')
 Blango_Greaves_B = Armor(name="Blango Greaves B", slots=[0, 2, 0], skills={AGI: 1}, part='greaves')
 
-# Rey_Greaves_A = Armor(name="Rey Sandgreaves A", slots=[0, 0, 1], skills={Rey: 1, MM: 1, LP: 1}, part='greaves')
+Rey_Greaves_A = Armor(name="Rey Sandgreaves A", slots=[0, 0, 1], skills={Rey: 1, MM: 1, LP: 1}, part='greaves')
 
-# Rey_Helm_B = Armor(name="Rey Sandhelm B", slots=[0, 0, 1], skills={Rey: 1, LP: 1, EE: 1}, part='helm')
-# Rey_Braces_B = Armor(name="Rey Sandbraces B", slots=[0, 0, 1], skills={Rey: 1, LP: 2}, part='braces')
-# Rey_Greaves_B = Armor(name="Rey Sandgreaves B", slots=[2, 0, 1], skills={Rey: 1, LP: 1}, part='greaves')
+Rey_Helm_B = Armor(name="Rey Sandhelm B", slots=[0, 0, 1], skills={Rey: 1, LP: 1, EE: 1}, part='helm')
+Rey_Braces_B = Armor(name="Rey Sandbraces B", slots=[0, 0, 1], skills={Rey: 1, LP: 2}, part='braces')
+Rey_Greaves_B = Armor(name="Rey Sandgreaves B", slots=[2, 0, 1], skills={Rey: 1, LP: 1}, part='greaves')
 
 # Azuz_Helm_A = Armor(name="Azuz Headdress A", slots=[0, 1, 0], skills={MM: 2}, part='helm')
 
@@ -130,10 +130,10 @@ Gore_Braces_B = Armor(name="Gore Vambraces B", slots=[0, 2, 0], skills={Gore: 1}
 Gore_Coil_B = Armor(name="Gore Coil B", slots=[0, 1, 1], skills={Gore: 1}, part='coil')
 Gore_Greaves_B = Armor(name="Gore Greaves B", slots=[2, 0, 1], skills={Gore: 1, AV: 1}, part='greaves')
 
-# Rey_Helm_Y = Armor(name="Rey Sandhelm Y", slots=[0, 0, 1], skills={Rey: 1, MM: 1, WEX: 1}, part='helm')
-# Rey_Mail_Y = Armor(name="Rey Sandmail Y", slots=[1, 0, 0], skills={Rey: 1, LP: 3}, part='mail')
-# Rey_Braces_Y = Armor(name="Rey Sandbraces Y", slots=[0, 0, 2], skills={Rey: 1, EE: 2}, part='braces')
-# Rey_Coil_Y = Armor(name="Rey Sandcoil Y", skills={Rey: 1, MM: 2, LP: 2}, part='coil')
+Rey_Helm_Y = Armor(name="Rey Sandhelm Y", slots=[0, 0, 1], skills={Rey: 1, MM: 1, WEX: 1}, part='helm')
+Rey_Mail_Y = Armor(name="Rey Sandmail Y", slots=[1, 0, 0], skills={Rey: 1, LP: 3}, part='mail')
+Rey_Braces_Y = Armor(name="Rey Sandbraces Y", slots=[0, 0, 2], skills={Rey: 1, EE: 2}, part='braces')
+Rey_Coil_Y = Armor(name="Rey Sandcoil Y", skills={Rey: 1, MM: 2, LP: 2}, part='coil')
 
 
 # Charms

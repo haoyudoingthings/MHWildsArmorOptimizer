@@ -31,24 +31,17 @@ def combinations_with_limited_replacement(objects, quantities, n):
 def main():
     # TODO: refactor configs into another file
     top_n = 10
-    weapons = [ # Meat: +2; Powercharm: +6
-        Weapon(200 + 8, 0.15, 0.34), # CB3
+    weapons = [ # Meat: +2; Powercharm: +6; Demondrug: +7; Mega Demondrug: +10
+        Weapon(220 + 15, 0.05, 0.4), 
     ]
-    must_have_skills = {GArkveld: 2}
+    must_have_skills = {Zoh: 2}
 
     all_decos = []
     deco_quantity = []
     for deco in Decoration.all.values():
         all_decos.append(deco)
         deco_quantity.append(deco.tot_amount)
-    armors_by_part = {
-        'helm': Armor.get_all_armors_by_part('helm'), 
-        'mail': Armor.get_all_armors_by_part('mail'), 
-        'braces': Armor.get_all_armors_by_part('braces'), 
-        'coil': Armor.get_all_armors_by_part('coil'), 
-        'greaves': Armor.get_all_armors_by_part('greaves'), 
-        'charm': Armor.get_all_armors_by_part('charm'), 
-    }
+    armors_by_part = {s: Armor.get_all_armors_by_part(s) for s in ARMOR_PART_NAMES}
     must_have_skills_deco_avail = {}
     for deco in all_decos:
         for skill in deco.skills.keys():

@@ -11,7 +11,7 @@ class Skill:
     def __init__(
             self, atk_buffs: list[float] | None = None, aff_buffs: list[float] | None = None, 
             name: str = 'Unnamed', uptime: list[float] | float = 1, replace: list | None = None, 
-            uptime_buffs_lst_lst: list[list[tuple[float, float, float]]] | None = None, pass_calc: bool = False, 
+            uptime_buffs_lst_lst: list[list[tuple[float, float, float]]] | None = None, 
         ):
         # start from level 1 (do not include level 0 data)
         assert atk_buffs is None or aff_buffs is None or len(atk_buffs) == len(aff_buffs)
@@ -23,7 +23,7 @@ class Skill:
         self.name = name
         self.replace = replace
         self.uptime_buffs_lst_lst = uptime_buffs_lst_lst
-        self.pass_calc = pass_calc
+        self.pass_calc = atk_buffs is None and aff_buffs is None and replace is None and uptime_buffs_lst_lst is None
         Skill.all[name] = self
 
     def __str__(self):

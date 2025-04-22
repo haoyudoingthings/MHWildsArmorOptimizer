@@ -11,18 +11,19 @@ CS = Skill(name="Counterstrike", atk_buffs=[10, 15, 25], uptime=[0.3, 0.35, 0.45
 LP = Skill(name="Latent Power", aff_buffs=[0.1, 0.2, 0.3, 0.4, 0.5], uptime=0.5)
 LP_Rey_I = Skill(name="Latent Power", aff_buffs=[0.1, 0.2, 0.3, 0.4, 0.5], uptime=150/(120+150)) # activates for 150s
 LP_Rey_II = Skill(name="Latent Power", aff_buffs=[0.1, 0.2, 0.3, 0.4, 0.5], uptime=210/(120+210)) # activates for 210s
-EE = Skill(name="Evade Extender", pass_calc=True)
-FLAY = Skill(name="Flayer", pass_calc=True)
-AV = Skill(name="Antivirus", pass_calc=True)
+EE = Skill(name="Evade Extender")
+FLAY = Skill(name="Flayer")
+AV = Skill(name="Antivirus")
+EP = Skill(name="Earplugs")
 Dosha = Skill(name="Doshaguma's Might", atk_buffs=[0, 10, 10, 25], uptime=0.8)
 Ebony = Skill(name="Ebony Odogaron's Power", atk_buffs=[0, 3, 3, 10])
 Fulgur = Skill(name="Fulgur Anjanath's Will", replace=[None, (MM, MM_Fulgur)])
-Dahaad = Skill(name="Jin Dahaad's Revolt", pass_calc=True)
-Arkveld = Skill(name="Arkveld's Hunger", pass_calc=True)
-GArkveld = Skill(name="G. Arkveld's Vitality", pass_calc=True)
-Udra = Skill(name="Nu Udra's Mutiny", pass_calc=True)
+Dahaad = Skill(name="Jin Dahaad's Revolt")
+Arkveld = Skill(name="Arkveld's Hunger")
+GArkveld = Skill(name="G. Arkveld's Vitality")
+Udra = Skill(name="Nu Udra's Mutiny")
 Rey = Skill(name="Rey Dau's Voltage", replace=[None, (LP, LP_Rey_I), (LP, LP_Rey_I), (LP, LP_Rey_II)])
-Zoh = Skill(name="Zoh Shia's Pulse", pass_calc=True)
+Zoh = Skill(name="Zoh Shia's Pulse")
 Gore = Skill(name="Gore Magala's Tyranny", uptime_buffs_lst_lst=[
     [(1, 0, 0)], 
     [(0.7, 0, 0.25), (0.3, 0, 0)], # lvl 2
@@ -40,6 +41,7 @@ Counter = Decoration(name="Counter", lvl=2, skills={CS: 1})
 Throttle = Decoration(name="Throttle", lvl=3, skills={LP: 1})
 # Flayer = Decoration(name="Flayer", lvl=3, skills={FLAY: 1})
 # Sane = Decoration(name="Sane", lvl=1, skills={AV: 1})
+Earplugs = Decoration(name="Earplugs", lvl=2, skill={EP: 1})
 
 
 # Armors
@@ -89,10 +91,10 @@ Dahaad_Greaves_B = Armor(name="Dahaad Shardgreaves B", slots=[0, 1, 0], skills={
 # G_Ebony_Braces_A = Armor(name="G. Ebony Braces A", skills={Ebony: 1, BR: 2}, part='braces')
 
 # G_Ebony_Helm_B = Armor(name="G. Ebony Helm B", slots=[0, 1, 0], skills={Ebony: 1, BR: 2}, part='helm')
-# G_Ebony_Mail_B = Armor(name="G. Ebony Mail B", slots=[0, 2, 0], skills={Ebony: 1}, part='mail')
+# G_Ebony_Mail_B = Armor(name="G. Ebony Mail B", slots=[0, 2, 0], skills={Ebony: 1, EP: 1}, part='mail')
 # G_Ebony_Braces_B = Armor(name="G. Ebony Braces B", slots=[1, 1, 0], skills={Ebony: 1, BR: 1}, part='braces')
 # G_Ebony_Coil_B = Armor(name="G. Ebony Coil B", slots=[1, 1, 0], skills={Ebony: 1, BR: 1}, part='coil')
-# G_Ebony_Greaves_B = Armor(name="G. Ebony Greaves B", slots=[1, 1, 0], skills={Ebony: 1}, part='greaves')
+# G_Ebony_Greaves_B = Armor(name="G. Ebony Greaves B", slots=[1, 1, 0], skills={Ebony: 1, EP: 1}, part='greaves')
 
 # Udra_Mail_A = Armor(name="Udra Miremail A", slots=[2, 0, 0], skills={Udra: 1, BR: 1}, part='mail')
 # Udra_Braces_A = Armor(name="Udra Mirebraces A", slots=[0, 1, 0], skills={Udra: 1, CS: 2}, part='braces')

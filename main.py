@@ -28,13 +28,40 @@ def combinations_with_limited_replacement(objects, quantities, n):
     
     yield from backtrack([], 0, n)
 
+def process_armor_combo(weapon_and_armors, must_have_skills_armor_only, must_have_skills_deco_avail, all_decos, deco_quantity):
+    armorset_no_deco = sum(weapon_and_armors, None)
+    # minimum skill requirement check 1
+    if any(armorset_no_deco.get_skill_lvl(skill) < lvl for skill, lvl in must_have_skills_armor_only.items()):
+        return None
+    empty_slots = armorset_no_deco.get_empty_slots()
+    
+    best_result = None
+    for deco_combo in combinations_with_limited_replacement(all_decos+[None], deco_quantity+[sum(empty_slots)], sum(empty_slots)):
+        slots_taken = [0] * MAX_DECO_LVL
+        for deco in deco_combo:
+            if deco is not None:
+                slots_taken[deco.lvl-1] += 1
+        if any(sum(slots_taken[i:]) > sum(empty_slots[i:]) for i in range(MAX_DECO_LVL)):
+            continue
+
+        armorset_with_deco = sum([armorset_no_deco] + list(deco_combo), None)
+        if any(armorset_with_deco.get_skill_lvl(skill) < lvl for skill, lvl in must_have_skills_deco_avail.items()):
+            continue
+            
+        if best_result is None or armorset_with_deco > best_result:
+            best_result = armorset_with_deco
+            
+    return best_result
+
+
 def main():
+    n_jobs = -3
     # TODO: refactor configs into another file
     top_n = 10
     weapons = [ # Meat: +2; Powercharm: +6; Demondrug: +7; Mega Demondrug: +10
         Weapon(220 + 15, 0.05, 0.4), 
     ]
-    must_have_skills = {Zoh: 2}
+    must_have_skills = {}
 
     all_decos = []
     deco_quantity = []
@@ -49,43 +76,31 @@ def main():
                 must_have_skills_deco_avail[skill] = must_have_skills[skill]
     must_have_skills_armor_only = {k: v for k, v in must_have_skills.items() if k not in must_have_skills_deco_avail}
 
-    # TODO: efficiency of armor search can still be improved
-    results = []
-    for weapon_and_armors in tqdm(
-        product(weapons, *[armors_by_part[k].values() for k in ARMOR_PART_NAMES]), 
-        total=reduce(lambda a, b: a * b, [len(weapons)] + [len(l) for l in armors_by_part.values()])
-    ):
-        armorset_no_deco = sum(weapon_and_armors, None)
-        # minimum skill requirement check 1
-        if any(armorset_no_deco.get_skill_lvl(skill) < lvl for skill, lvl in must_have_skills_armor_only.items()):
-            continue
-        empty_slots = armorset_no_deco.get_empty_slots()
-        
-        # TODO: this part can definitely be sped up
-        # Use DFS? From low lvl slots up?
-        for deco_combo in combinations_with_limited_replacement(all_decos+[None], deco_quantity+[sum(empty_slots)], sum(empty_slots)):
-            # check if there's enough slots
-            slots_taken = [0] * MAX_DECO_LVL
-            for deco in deco_combo:
-                if deco is not None:
-                    slots_taken[deco.lvl-1] += 1
-            if any(sum(slots_taken[i:]) > sum(empty_slots[i:]) for i in range(MAX_DECO_LVL)):
-                continue
-
-            armorset_with_deco = sum([armorset_no_deco] + list(deco_combo), None)
-
-            # minimum skill requirement check 2
-            if any(armorset_with_deco.get_skill_lvl(skill) < lvl for skill, lvl in must_have_skills_deco_avail.items()):
-                continue
-
-            if len(results) < top_n:
-                heappush(results, armorset_with_deco)
-            else:
-                heappushpop(results, armorset_with_deco)
-
+    armor_combinations = list(product(weapons, *[armors_by_part[k].values() for k in ARMOR_PART_NAMES]))
     
-    results.sort(reverse=True)
+    with tqdm_joblib(total=len(armor_combinations)):
+        results = Parallel(n_jobs=n_jobs)(
+            delayed(process_armor_combo)(
+                combo, 
+                must_have_skills_armor_only,
+                must_have_skills_deco_avail,
+                all_decos,
+                deco_quantity
+            )
+            for combo in armor_combinations
+        )
+    
+    # Filter out None results and get top N
+    results = [r for r in results if r is not None]
+    results_top_n = []
     for armorset in results:
+        if len(results_top_n) < top_n:
+            heappush(results_top_n, armorset)
+        else:
+            heappushpop(results_top_n, armorset)
+    results_top_n.sort(reverse=True)
+
+    for armorset in results_top_n:
         print(f"\nEffective Raw: {armorset.get_eff_atk():.4f}")
         print("Weapon: ", armorset.weapon)
         print("Helm:   ", armorset.parts['helm'])

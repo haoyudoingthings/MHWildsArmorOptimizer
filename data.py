@@ -1,21 +1,22 @@
 from classes import *
+from config import *
 
 
 # Skills
 WEX = Skill(name="Weakness Exploit", aff_buffs=[0.05, 0.1, 0.15, 0.2, 0.3])
-AGI = Skill(name="Agitator", atk_buffs=[4, 8, 12, 16, 20], aff_buffs=[0.03, 0.05, 0.07, 0.1, 0.15], uptime=0.7)
-MM = Skill(name="Maximum Might", aff_buffs=[0.1, 0.2, 0.3], uptime=0.8)
+AGI = Skill(name="Agitator", atk_buffs=[4, 8, 12, 16, 20], aff_buffs=[0.03, 0.05, 0.07, 0.1, 0.15], uptime=UPTIMES['AGI'])
+MM = Skill(name="Maximum Might", aff_buffs=[0.1, 0.2, 0.3], uptime=UPTIMES['MM'])
 MM_Fulgur = Skill(name="Maximum Might", aff_buffs=[0.1, 0.2, 0.3])
 BR = Skill(name="Burst", atk_buffs=[5]) # for GS
-CS = Skill(name="Counterstrike", atk_buffs=[10, 15, 25], uptime=[0.3, 0.35, 0.45])
-LP = Skill(name="Latent Power", aff_buffs=[0.1, 0.2, 0.3, 0.4, 0.5], uptime=0.5)
-LP_Rey_I = Skill(name="Latent Power", aff_buffs=[0.1, 0.2, 0.3, 0.4, 0.5], uptime=150/(120+150)) # activates for 150s
-LP_Rey_II = Skill(name="Latent Power", aff_buffs=[0.1, 0.2, 0.3, 0.4, 0.5], uptime=210/(120+210)) # activates for 210s
+CS = Skill(name="Counterstrike", atk_buffs=[10, 15, 25], uptime=UPTIMES['CS'])
+LP = Skill(name="Latent Power", aff_buffs=[0.1, 0.2, 0.3, 0.4, 0.5], uptime=UPTIMES['LP'])
+LP_Rey_I = Skill(name="Latent Power", aff_buffs=[0.1, 0.2, 0.3, 0.4, 0.5], uptime=UPTIMES['LP_Rey_I'])
+LP_Rey_II = Skill(name="Latent Power", aff_buffs=[0.1, 0.2, 0.3, 0.4, 0.5], uptime=UPTIMES['LP_Rey_II'])
 EE = Skill(name="Evade Extender")
 FLAY = Skill(name="Flayer")
 AV = Skill(name="Antivirus")
 EP = Skill(name="Earplugs")
-Dosha = Skill(name="Doshaguma's Might", atk_buffs=[0, 10, 10, 25], uptime=0.8)
+Dosha = Skill(name="Doshaguma's Might", atk_buffs=[0, 10, 10, 25], uptime=UPTIMES['Dosha'])
 Ebony = Skill(name="Ebony Odogaron's Power", atk_buffs=[0, 3, 3, 10])
 Fulgur = Skill(name="Fulgur Anjanath's Will", replace=[None, (MM, MM_Fulgur)])
 Dahaad = Skill(name="Jin Dahaad's Revolt")
@@ -26,9 +27,9 @@ Rey = Skill(name="Rey Dau's Voltage", replace=[None, (LP, LP_Rey_I), (LP, LP_Rey
 Zoh = Skill(name="Zoh Shia's Pulse")
 Gore = Skill(name="Gore Magala's Tyranny", uptime_buffs_lst_lst=[
     [(1, 0, 0)], 
-    [(0.7, 0, 0.25), (0.3, 0, 0)], # lvl 2
-    [(0.7, 0, 0.25), (0.3, 0, 0)], 
-    [(0.7, 15, 0.25), (0.3, 10, 0)], # lvl 4
+    [(UPTIMES['Gore'], 0, 0.25), (1 - UPTIMES['Gore'], 0, 0)], # lvl 2
+    [(UPTIMES['Gore'], 0, 0.25), (1 - UPTIMES['Gore'], 0, 0)], 
+    [(UPTIMES['Gore'], 15, 0.25), (1 - UPTIMES['Gore'], 10, 0)], # lvl 4
 ]) # Assuming antivirus already taken into account
 
 
@@ -41,7 +42,7 @@ Counter = Decoration(name="Counter", lvl=2, skills={CS: 1})
 Throttle = Decoration(name="Throttle", lvl=3, skills={LP: 1})
 # Flayer = Decoration(name="Flayer", lvl=3, skills={FLAY: 1})
 # Sane = Decoration(name="Sane", lvl=1, skills={AV: 1})
-Earplugs = Decoration(name="Earplugs", lvl=2, skill={EP: 1})
+Earplugs = Decoration(name="Earplugs", lvl=2, skills={EP: 1})
 
 
 # Armors
@@ -88,13 +89,13 @@ Dahaad_Braces_B = Armor(name="Dahaad Shardbraces B", slots=[0, 0, 1], skills={Da
 Dahaad_Coil_B = Armor(name="Dahaad Shardcoil B", slots=[3, 0, 0], skills={Dahaad: 1, WEX: 1}, part='coil')
 Dahaad_Greaves_B = Armor(name="Dahaad Shardgreaves B", slots=[0, 1, 0], skills={Dahaad: 1, AGI: 2}, part='greaves')
 
-# G_Ebony_Braces_A = Armor(name="G. Ebony Braces A", skills={Ebony: 1, BR: 2}, part='braces')
+G_Ebony_Braces_A = Armor(name="G. Ebony Braces A", skills={Ebony: 1, BR: 2}, part='braces')
 
-# G_Ebony_Helm_B = Armor(name="G. Ebony Helm B", slots=[0, 1, 0], skills={Ebony: 1, BR: 2}, part='helm')
-# G_Ebony_Mail_B = Armor(name="G. Ebony Mail B", slots=[0, 2, 0], skills={Ebony: 1, EP: 1}, part='mail')
-# G_Ebony_Braces_B = Armor(name="G. Ebony Braces B", slots=[1, 1, 0], skills={Ebony: 1, BR: 1}, part='braces')
-# G_Ebony_Coil_B = Armor(name="G. Ebony Coil B", slots=[1, 1, 0], skills={Ebony: 1, BR: 1}, part='coil')
-# G_Ebony_Greaves_B = Armor(name="G. Ebony Greaves B", slots=[1, 1, 0], skills={Ebony: 1, EP: 1}, part='greaves')
+G_Ebony_Helm_B = Armor(name="G. Ebony Helm B", slots=[0, 1, 0], skills={Ebony: 1, BR: 2}, part='helm')
+G_Ebony_Mail_B = Armor(name="G. Ebony Mail B", slots=[0, 2, 0], skills={Ebony: 1, EP: 1}, part='mail')
+G_Ebony_Braces_B = Armor(name="G. Ebony Braces B", slots=[1, 1, 0], skills={Ebony: 1, BR: 1}, part='braces')
+G_Ebony_Coil_B = Armor(name="G. Ebony Coil B", slots=[1, 1, 0], skills={Ebony: 1, BR: 1}, part='coil')
+G_Ebony_Greaves_B = Armor(name="G. Ebony Greaves B", slots=[1, 1, 0], skills={Ebony: 1, EP: 1}, part='greaves')
 
 # Udra_Mail_A = Armor(name="Udra Miremail A", slots=[2, 0, 0], skills={Udra: 1, BR: 1}, part='mail')
 # Udra_Braces_A = Armor(name="Udra Mirebraces A", slots=[0, 1, 0], skills={Udra: 1, CS: 2}, part='braces')
@@ -109,11 +110,11 @@ Blango_Mail_B = Armor(name="Blango Mail B", slots=[0, 1, 0], skills={AGI: 2}, pa
 Blango_Coil_B = Armor(name="Blango Coil B", slots=[2, 0, 0], skills={AGI: 2}, part='coil')
 Blango_Greaves_B = Armor(name="Blango Greaves B", slots=[0, 2, 0], skills={AGI: 1}, part='greaves')
 
-# Rey_Greaves_A = Armor(name="Rey Sandgreaves A", slots=[0, 0, 1], skills={Rey: 1, MM: 1, LP: 1}, part='greaves')
+Rey_Greaves_A = Armor(name="Rey Sandgreaves A", slots=[0, 0, 1], skills={Rey: 1, MM: 1, LP: 1}, part='greaves')
 
-# Rey_Helm_B = Armor(name="Rey Sandhelm B", slots=[0, 0, 1], skills={Rey: 1, LP: 1, EE: 1}, part='helm')
-# Rey_Braces_B = Armor(name="Rey Sandbraces B", slots=[0, 0, 1], skills={Rey: 1, LP: 2}, part='braces')
-# Rey_Greaves_B = Armor(name="Rey Sandgreaves B", slots=[2, 0, 1], skills={Rey: 1, LP: 1}, part='greaves')
+Rey_Helm_B = Armor(name="Rey Sandhelm B", slots=[0, 0, 1], skills={Rey: 1, LP: 1, EE: 1}, part='helm')
+Rey_Braces_B = Armor(name="Rey Sandbraces B", slots=[0, 0, 1], skills={Rey: 1, LP: 2}, part='braces')
+Rey_Greaves_B = Armor(name="Rey Sandgreaves B", slots=[2, 0, 1], skills={Rey: 1, LP: 1}, part='greaves')
 
 # Azuz_Helm_A = Armor(name="Azuz Headdress A", slots=[0, 1, 0], skills={MM: 2}, part='helm')
 
@@ -132,10 +133,10 @@ Gore_Braces_B = Armor(name="Gore Vambraces B", slots=[0, 2, 0], skills={Gore: 1}
 Gore_Coil_B = Armor(name="Gore Coil B", slots=[0, 1, 1], skills={Gore: 1}, part='coil')
 Gore_Greaves_B = Armor(name="Gore Greaves B", slots=[2, 0, 1], skills={Gore: 1, AV: 1}, part='greaves')
 
-# Rey_Helm_Y = Armor(name="Rey Sandhelm Y", slots=[0, 0, 1], skills={Rey: 1, MM: 1, WEX: 1}, part='helm')
-# Rey_Mail_Y = Armor(name="Rey Sandmail Y", slots=[1, 0, 0], skills={Rey: 1, LP: 3}, part='mail')
-# Rey_Braces_Y = Armor(name="Rey Sandbraces Y", slots=[0, 0, 2], skills={Rey: 1, EE: 2}, part='braces')
-# Rey_Coil_Y = Armor(name="Rey Sandcoil Y", skills={Rey: 1, MM: 2, LP: 2}, part='coil')
+Rey_Helm_Y = Armor(name="Rey Sandhelm Y", slots=[0, 0, 1], skills={Rey: 1, MM: 1, WEX: 1}, part='helm')
+Rey_Mail_Y = Armor(name="Rey Sandmail Y", slots=[1, 0, 0], skills={Rey: 1, LP: 3}, part='mail')
+Rey_Braces_Y = Armor(name="Rey Sandbraces Y", slots=[0, 0, 2], skills={Rey: 1, EE: 2}, part='braces')
+Rey_Coil_Y = Armor(name="Rey Sandcoil Y", skills={Rey: 1, MM: 2, LP: 2}, part='coil')
 
 
 # Charms
@@ -144,3 +145,4 @@ Exploiter_Charm_II = Armor(name="Exploiter Charm II", skills={WEX: 2}, part='cha
 Mighty_Charm_II = Armor(name="Mighty Charm II", skills={MM: 2}, part='charm')
 Chain_Charm_II = Armor(name="Chain Charm II", skills={BR: 2}, part='charm')
 Counter_Charm_III = Armor(name="Counter Charm III", skills={CS: 3}, part='charm')
+Earplugs_Charm_II = Armor(name="Earplugs Charm II", skills={EP: 2}, part='charm')

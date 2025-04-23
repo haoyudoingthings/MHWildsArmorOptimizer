@@ -1,9 +1,8 @@
 from classes import *
 from data import *
-from functools import reduce
+from config import *
 from itertools import product
 from heapq import heappush, heappushpop
-from tqdm import tqdm
 from wakepy import keep
 from joblib import Parallel, delayed
 from tqdm_joblib import tqdm_joblib
@@ -55,13 +54,8 @@ def process_armor_combo(weapon_and_armors, must_have_skills_armor_only, must_hav
 
 
 def main():
-    n_jobs = -3
-    # TODO: refactor configs into another file
-    top_n = 10
-    weapons = [ # Meat: +2; Powercharm: +6; Demondrug: +7; Mega Demondrug: +10
-        Weapon(220 + 15, 0.05, 0.4), 
-    ]
-    must_have_skills = {}
+    weapons = [Weapon(w['raw'], w['aff'], w['crit_bonus'], w['name']) for w in WEAPONS]
+    must_have_skills = {Skill.all[k]: v for k, v in MUST_HAVE_SKILLS.items()}
 
     all_decos = []
     deco_quantity = []
@@ -79,7 +73,7 @@ def main():
     armor_combinations = list(product(weapons, *[armors_by_part[k].values() for k in ARMOR_PART_NAMES]))
     
     with tqdm_joblib(total=len(armor_combinations)):
-        results = Parallel(n_jobs=n_jobs)(
+        results = Parallel(n_jobs=N_JOBS)(
             delayed(process_armor_combo)(
                 combo, 
                 must_have_skills_armor_only,
@@ -94,7 +88,7 @@ def main():
     results = [r for r in results if r is not None]
     results_top_n = []
     for armorset in results:
-        if len(results_top_n) < top_n:
+        if len(results_top_n) < KEEP_TOP_N:
             heappush(results_top_n, armorset)
         else:
             heappushpop(results_top_n, armorset)

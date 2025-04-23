@@ -1,9 +1,6 @@
-# TODO: add ways to accommodate skills that have different effects during different circumstances (e.g. Gore Magala's Tyranny)
 from itertools import chain
+from config import *
 
-
-MAX_DECO_LVL = 3
-ARMOR_PART_NAMES = ['helm', 'mail', 'braces', 'coil', 'greaves', 'charm']
 
 class Skill:
     all = {}

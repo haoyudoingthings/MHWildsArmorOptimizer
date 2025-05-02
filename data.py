@@ -3,10 +3,11 @@ from config import *
 
 
 # Skills
+# A trailing space is added to replacement armor skill names to distinguish them from the original
 WEX = Skill(name="Weakness Exploit", aff_buffs=[0.05, 0.1, 0.15, 0.2, 0.3])
 AGI = Skill(name="Agitator", atk_buffs=[4, 8, 12, 16, 20], aff_buffs=[0.03, 0.05, 0.07, 0.1, 0.15], uptime=UPTIMES['AGI'])
 MM = Skill(name="Maximum Might", aff_buffs=[0.1, 0.2, 0.3], uptime=UPTIMES['MM'])
-MM_Fulgur = Skill(name="Maximum Might", aff_buffs=[0.1, 0.2, 0.3])
+MM_Fulgur = Skill(name="Maximum Might ", aff_buffs=[0.1, 0.2, 0.3])
 BR = Skill(name="Burst", uptime_buffs_lst_lst=[
     [(UPTIMES['BR1'], 5, 0), (UPTIMES['BR2'], 10, 0), (1 - UPTIMES['BR1'] - UPTIMES['BR2'], 0, 0)], 
     [(UPTIMES['BR1'], 5, 0), (UPTIMES['BR2'], 12, 0), (1 - UPTIMES['BR1'] - UPTIMES['BR2'], 0, 0)], 

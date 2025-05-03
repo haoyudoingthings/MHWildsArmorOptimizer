@@ -3,6 +3,7 @@ from data import *
 from config import *
 from itertools import product
 from heapq import heappush, heappushpop
+from math import ceil
 from wakepy import keep
 from joblib import Parallel, delayed
 from tqdm_joblib import tqdm_joblib
@@ -27,15 +28,45 @@ def combinations_with_limited_replacement(objects, quantities, n):
     
     yield from backtrack([], 0, n)
 
-def process_armor_combo(weapon_and_armors, must_have_skills_armor_only, must_have_skills_deco_avail, all_decos, deco_quantity):
+def process_armor_combo(weapon_and_armors, must_have_skills_armor_only, must_have_skills_deco_avail, all_decos0, deco_quantity0):
     armorset_no_deco = sum(weapon_and_armors, None)
     # minimum skill requirement check 1
     if any(armorset_no_deco.get_skill_lvl(skill) < lvl for skill, lvl in must_have_skills_armor_only.items()):
         return None
-    empty_slots = armorset_no_deco.get_empty_slots()
+
+    all_decos = all_decos0.copy()
+    deco_quantity = deco_quantity0.copy()
+    for i, deco in enumerate(all_decos):
+        if all(skill.is_util and skill not in must_have_skills_deco_avail for skill in deco.skills.keys()):
+            deco_quantity[i] = 0
+            continue
+        deco_quantity[i] = min(
+            deco_quantity[i], 
+            max(ceil((skill.tot_lvls() - armorset_no_deco.get_skill_lvl(skill)) / skill_lvl) for skill, skill_lvl in deco.skills.items())
+        )
+    for i in range(len(deco_quantity)-1, -1, -1):
+        if deco_quantity[i] == 0:
+            deco_quantity.pop(i)
+            all_decos.pop(i)
     
+    empty_slots = armorset_no_deco.get_empty_slots()
+    deco_quantity_for_each_slot_lvl = [0] * MAX_DECO_LVL
+    for deco, deco_cnt in zip(all_decos, deco_quantity):
+        deco_quantity_for_each_slot_lvl[deco.lvl-1] += deco_cnt
+    excess_decos = 0
+    num_no_deco_slots = 0
+    for s, d in zip(empty_slots, deco_quantity_for_each_slot_lvl):
+        excess_decos += d - s
+        if excess_decos < 0:
+            num_no_deco_slots += -excess_decos
+            excess_decos = 0
+
     best_result = None
-    for deco_combo in combinations_with_limited_replacement(all_decos+[None], deco_quantity+[sum(empty_slots)], sum(empty_slots)):
+    for deco_combo in combinations_with_limited_replacement(
+        all_decos if num_no_deco_slots <= 0 else all_decos + [None], 
+        deco_quantity if num_no_deco_slots <= 0 else deco_quantity + [num_no_deco_slots], 
+        sum(empty_slots), 
+    ):
         slots_taken = [0] * MAX_DECO_LVL
         for deco in deco_combo:
             if deco is not None:

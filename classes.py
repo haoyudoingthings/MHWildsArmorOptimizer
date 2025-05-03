@@ -20,7 +20,7 @@ class Skill:
         self.name = name
         self.replace = replace
         self.uptime_buffs_lst_lst = uptime_buffs_lst_lst
-        self.pass_calc = atk_buffs is None and aff_buffs is None and replace is None and uptime_buffs_lst_lst is None
+        self.is_util = atk_buffs is None and aff_buffs is None and replace is None and uptime_buffs_lst_lst is None
         if name[-1] != ' ':
             Skill.all[name] = self # exclude improved versions of skills
 
@@ -220,7 +220,7 @@ class Armorset:
             
             uptime_atk_aff_bonus_lst = [(1, 0, 0)]
             for skill, lvl in all_skills.items():
-                if skill.pass_calc:
+                if skill.is_util:
                     continue
                 new_lst = []
                 for p, atk, aff in skill.get_uptime_buffs_lst(lvl):

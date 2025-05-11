@@ -42,7 +42,8 @@ def process_armor_combo(weapon_and_armors, must_have_skills_armor_only, must_hav
             continue
         deco_quantity[i] = min(
             deco_quantity[i], 
-            max(ceil((skill.tot_lvls() - armorset_no_deco.get_skill_lvl(skill)) / skill_lvl) for skill, skill_lvl in deco.skills.items())
+            max(ceil(((skill.tot_lvls() if not skill.is_util else must_have_skills_deco_avail[skill]) - \
+                      armorset_no_deco.get_skill_lvl(skill)) / skill_lvl) for skill, skill_lvl in deco.skills.items())
         )
     for i in range(len(deco_quantity)-1, -1, -1):
         if deco_quantity[i] == 0:
